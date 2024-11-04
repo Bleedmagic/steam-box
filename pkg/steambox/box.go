@@ -41,7 +41,7 @@ func (b *Box) GetGist(ctx context.Context, id string) (*github.Gist, error) {
 	gist, _, err := b.github.Gists.Get(ctx, id)
 	if err != nil {
 		return nil, err
-	}
+	}d
 
 	return gist, nil
 }
@@ -52,7 +52,7 @@ func (b *Box) UpdateGist(ctx context.Context, id string, gist *github.Gist) erro
 	return err
 }
 
-// GetPlayTime gets the top 5 Steam games played in descending order from the Steam API.
+// GetPlayTime gets the top 10 Steam games played in descending order from the Steam API.
 func (b *Box) GetPlayTime(ctx context.Context, steamID uint64, multiLined bool, appID ...uint32) ([]string, error) {
 	params := &steam.GetOwnedGamesParams{
 		SteamID:                steamID,
@@ -74,7 +74,7 @@ func (b *Box) GetPlayTime(ctx context.Context, steamID uint64, multiLined bool, 
 	})
 
 	for _, game := range gameRet.Games {
-		if max >= 5 {
+		if max >= 10 {
 			break
 		}
 
@@ -96,11 +96,11 @@ func (b *Box) GetPlayTime(ctx context.Context, steamID uint64, multiLined bool, 
 	return lines, nil
 }
 
-// GetRecentGames gets 5 recently played games from the Steam API.
+// GetRecentGames gets 10 recently played games from the Steam API.
 func (b *Box) GetRecentGames(ctx context.Context, steamID uint64, multiLined bool) ([]string, error) {
 	params := &steam.GetRecentlyPlayedGamesParams{
 		SteamID: steamID,
-		Count: 5,
+		Count: 10,
 	}
 
 	gameRet, err := b.steam.IPlayerService.GetRecentlyPlayedGames(ctx, params)
@@ -111,7 +111,7 @@ func (b *Box) GetRecentGames(ctx context.Context, steamID uint64, multiLined boo
 	var max = 0
 
 	for _, game := range gameRet.Games {
-		if max >= 5 {
+		if max >= 10 {
 			break
 		}
 
