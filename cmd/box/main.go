@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-	var err error
 	steamAPIKey := os.Getenv("STEAM_API_KEY")
 	steamID, _ := strconv.ParseUint(os.Getenv("STEAM_ID"), 10, 64)
 	appIDs := os.Getenv("APP_ID")
