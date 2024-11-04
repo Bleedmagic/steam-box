@@ -229,7 +229,7 @@ func getNameEmoji(id int, name string) string {
 		105600:  "🌍 ",     // Terraria
 		391540:  "💔 ",     // Undertale
 		1794680: "🧛 ",     // Vampire Survivors
-		2726450: "🔪 ",     // Windowkill
+		2726450: "🔪 "     // Windowkill
 	}
 
 	if emoji, ok := nameEmojiMap[id]; ok {
