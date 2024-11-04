@@ -210,5 +210,5 @@ func getNameEmoji(id int, name string) string {
 		return "❓ " + name
 	}
 
-	return "🎮 " + name
+	return "✨ " + name
 }
