@@ -17,6 +17,7 @@ jobs:
     env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GIST_ID: f796e6cee5e4e074ba995e32c3ec9c1d
+          GIST_ID_RECENT: 0ba0c711e56d940b84cac27f58b9e158
           STEAM_API_KEY: ${{ secrets.STEAM_API_KEY }}
           STEAM_ID: ${{ secrets.STEAM_ID }}
     steps:
