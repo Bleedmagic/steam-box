@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
-	"math"
 	"os"
 	"sort"
 	"strings"
@@ -73,23 +72,24 @@ func (b *Box) GetPlayTime(ctx context.Context, steamID uint64, multiLined bool, 
 		return gameRet.Games[i].PlaytimeForever > gameRet.Games[j].PlaytimeForever
 	})
 
-	for i, game := range gameRet.Games {
+	for _, game := range gameRet.Games {
 		if max >= 10 {
 			break
 		}
 
-		hours := int(math.Floor(float64(game.PlaytimeForever / 60)))
-		mins := int(math.Floor(float64(game.PlaytimeForever % 60)))
+		hours := game.PlaytimeForever / 60
+		mins := game.PlaytimeForever % 60
 
-		// Alternate clock icons based on index
-		clockIcon := "⌚"
-		if i%2 != 0 {
-			clockIcon = "⏱️"
+		if multiLined {
+			gameLine := getNameEmoji(game.Appid, game.Name)
+			lines = append(lines, gameLine)
+			hoursLine := fmt.Sprintf("						    ⌚ %d hrs %d mins", hours, mins)
+			lines = append(lines, hoursLine)
+		} else {
+			line := pad(getNameEmoji(game.Appid, game.Name), " ", 35) + " " +
+				pad(fmt.Sprintf("⌚ %d hrs %d mins", hours, mins), "", 16)
+			lines = append(lines, line)
 		}
-
-		// Updated line formatting with alternating clock icons
-		line := fmt.Sprintf("%s %-30s %s %d hrs %d mins", getNameEmoji(game.Appid, game.Name), game.Name, clockIcon, hours, mins)
-		lines = append(lines, line)
 		max++
 	}
 	return lines, nil
@@ -99,7 +99,7 @@ func (b *Box) GetPlayTime(ctx context.Context, steamID uint64, multiLined bool, 
 func (b *Box) GetRecentGames(ctx context.Context, steamID uint64, multiLined bool) ([]string, error) {
 	params := &steam.GetRecentlyPlayedGamesParams{
 		SteamID: steamID,
-		Count:   10,
+		Count: 10,
 	}
 
 	gameRet, err := b.steam.IPlayerService.GetRecentlyPlayedGames(ctx, params)
@@ -109,7 +109,7 @@ func (b *Box) GetRecentGames(ctx context.Context, steamID uint64, multiLined boo
 	var lines []string
 	var max = 0
 
-	for i, game := range gameRet.Games {
+	for _, game := range gameRet.Games {
 		if max >= 10 {
 			break
 		}
@@ -118,18 +118,19 @@ func (b *Box) GetRecentGames(ctx context.Context, steamID uint64, multiLined boo
 			game.Name = "Unknown Game"
 		}
 
-		hours := int(math.Floor(float64(game.PlaytimeForever / 60)))
-		mins := int(math.Floor(float64(game.PlaytimeForever % 60)))
+		hours := game.PlaytimeForever / 60
+		mins := game.PlaytimeForever % 60
 
-		// Alternate clock icons based on index
-		clockIcon := "⌚"
-		if i%2 != 0 {
-			clockIcon = "⏱️"
+		if multiLined {
+			gameLine := getNameEmoji(game.Appid, game.Name)
+			lines = append(lines, gameLine)
+			hoursLine := fmt.Sprintf("						    ⌚ %d hrs %d mins", hours, mins)
+			lines = append(lines, hoursLine)
+		} else {
+			line := pad(getNameEmoji(game.Appid, game.Name), " ", 35) + " " +
+				pad(fmt.Sprintf("⌚ %d hrs %d mins", hours, mins), "", 16)
+			lines = append(lines, line)
 		}
-
-		// Updated line formatting with alternating clock icons
-		line := fmt.Sprintf("%s %-30s %s %d hrs %d mins", getNameEmoji(game.Appid, game.Name), game.Name, clockIcon, hours, mins)
-		lines = append(lines, line)
 		max++
 	}
 	return lines, nil
