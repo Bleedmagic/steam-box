@@ -41,7 +41,7 @@ func (b *Box) GetGist(ctx context.Context, id string) (*github.Gist, error) {
 	gist, _, err := b.github.Gists.Get(ctx, id)
 	if err != nil {
 		return nil, err
-	}d
+	}
 
 	return gist, nil
 }
