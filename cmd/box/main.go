@@ -29,24 +29,13 @@ func main() {
 
 	ghToken := os.Getenv("GH_TOKEN")
 	ghUsername := os.Getenv("GH_USER")
-	gistID := os.Getenv("GIST_ID")
-	gistIDRecent := os.Getenv("GIST_ID_RECENT")
+	gistID := os.Getenv("GIST_ID")         // All-time playtime Gist ID
+	gistIDRecent := os.Getenv("GIST_ID_RECENT") // Recent playtime Gist ID
 
-	steamOption := "ALLTIME" // options for types of games to list: RECENT (recently played games), ALLTIME <default> (playtime of games in descending order)
-	if os.Getenv("STEAM_OPTION") != "" {
-		steamOption = os.Getenv("STEAM_OPTION")
-	}
+	multiLined := os.Getenv("MULTILINE") == "YES"
 
-	multiLined := false // boolean for whether hours should have their own line - YES = true, NO = false
-	if os.Getenv("MULTILINE") != "" {
-		lineOption := os.Getenv("MULTILINE")
-		if lineOption == "YES" {
-			multiLined = true
-		}
-	}
-	
-	updateOption := os.Getenv("GIST") // options for update: GIST (Gist only), MARKDOWN (README only), GIST_AND_MARKDOWN (Gist and README)
-	markdownFile := os.Getenv("MARKDOWN_FILE") // the markdown filename (e.g. MYFILE.md)
+	updateOption := os.Getenv("GIST") // options for update: GIST, MARKDOWN, GIST_AND_MARKDOWN
+	markdownFile := os.Getenv("MARKDOWN_FILE")
 
 	var updateGist, updateMarkdown bool
 	if updateOption == "MARKDOWN" {
@@ -62,55 +51,69 @@ func main() {
 
 	ctx := context.Background()
 
-	var (
-		filename string
-		lines []string
-	)
-
-	if steamOption == "ALLTIME" {
-		filename = "⭐ My Most Played Steam Games"
-		lines, err = box.GetPlayTime(ctx, steamID, multiLined, appIDList...)
+	// Update all-time playtime Gist
+	if gistID != "" {
+		lines, err := box.GetPlayTime(ctx, steamID, multiLined, appIDList...)
 		if err != nil {
-			panic("GetPlayTime err:" + err.Error())
-		}
-	} else if steamOption == "RECENT" {
-		filename = "🔥 Recently Played Steam Games"
-		lines, err = box.GetRecentGames(ctx, steamID, multiLined)
-		if err != nil {
-			panic("GetRecentGames err:" + err.Error())
-		}
-	}
-
-	if updateGist {
-		gist, err := box.GetGist(ctx, gistID)
-		if err != nil {
-			panic("GetGist err:" + err.Error())
+			panic("GetPlayTime error: " + err.Error())
 		}
 
-		f := gist.Files[github.GistFilename(filename)]
-
-		f.Content = github.String(strings.Join(lines, "\n"))
-		gist.Files[github.GistFilename(filename)] = f
-
-		err = box.UpdateGist(ctx, gistID, gist)
-		if err != nil {
-			panic("UpdateGist err:" + err.Error())
-		}
-	}
-
-	if updateMarkdown && markdownFile != "" {
-		title := filename
 		if updateGist {
-			title = fmt.Sprintf(`#### <a href="https://gist.github.com/%s" target="_blank">%s</a>`, gistID, title)
+			updateGistContent(ctx, box, gistID, "⭐ My Most Played Steam Games", lines)
 		}
 
-		content := bytes.NewBuffer(nil)
-		content.WriteString(strings.Join(lines, "\n"))
+		if updateMarkdown && markdownFile != "" {
+			updateMarkdownFile(ctx, markdownFile, gistID, "⭐ My Most Played Steam Games", lines)
+		}
+	}
 
-		err = box.UpdateMarkdown(ctx, title, markdownFile, content.Bytes())
+	// Update recent playtime Gist
+	if gistIDRecent != "" {
+		lines, err := box.GetRecentGames(ctx, steamID, multiLined)
 		if err != nil {
-			fmt.Println(err)
+			panic("GetRecentGames error: " + err.Error())
 		}
-		fmt.Println("updating markdown successfully on ", markdownFile)
+
+		if updateGist {
+			updateGistContent(ctx, box, gistIDRecent, "🔥 Recently Played Steam Games", lines)
+		}
+
+		if updateMarkdown && markdownFile != "" {
+			updateMarkdownFile(ctx, markdownFile, gistIDRecent, "🔥 Recently Played Steam Games", lines)
+		}
+	}
+}
+
+// Helper function to update Gist content
+func updateGistContent(ctx context.Context, box *steambox.Box, gistID, filename string, lines []string) {
+	gist, err := box.GetGist(ctx, gistID)
+	if err != nil {
+		panic("GetGist error: " + err.Error())
+	}
+
+	f := gist.Files[github.GistFilename(filename)]
+	f.Content = github.String(strings.Join(lines, "\n"))
+	gist.Files[github.GistFilename(filename)] = f
+
+	err = box.UpdateGist(ctx, gistID, gist)
+	if err != nil {
+		panic("UpdateGist error: " + err.Error())
+	}
+	fmt.Println("Updated Gist:", filename)
+}
+
+// Helper function to update Markdown file
+func updateMarkdownFile(ctx context.Context, markdownFile, gistID, title string, lines []string) {
+	titleLink := fmt.Sprintf(`#### <a href="https://gist.github.com/%s" target="_blank">%s</a>`, gistID, title)
+
+	content := bytes.NewBuffer(nil)
+	content.WriteString(strings.Join(lines, "\n"))
+
+	box := steambox.NewBox(os.Getenv("STEAM_API_KEY"), os.Getenv("GH_USER"), os.Getenv("GH_TOKEN"))
+	err := box.UpdateMarkdown(ctx, titleLink, markdownFile, content.Bytes())
+	if err != nil {
+		fmt.Println("UpdateMarkdown error:", err)
+	} else {
+		fmt.Println("Updated markdown file:", markdownFile)
 	}
 }
