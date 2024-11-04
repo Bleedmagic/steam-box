@@ -193,7 +193,7 @@ func getNameEmoji(id int, name string) string {
 		359550:  "🔫 ",     // Tom Clancy's Rainbow Six Siege
 		431960:  "💻 ",     // Wallpaper Engine
 		578080:  "🍳 ",     // PUBG
-		945360:  "🕵️‍♂️ ", 	// Among Us
+		945360:  "🕵️‍♂️ ",     // Among Us
 		1250410: "🛩️ ",     // Microsoft Flight Simulator
 		1091500: "🦾 ",     // Cyberpunk 2077
 		594650:  "🎯 ",     // Hunt: Showdown
@@ -203,6 +203,33 @@ func getNameEmoji(id int, name string) string {
 		440:     "🎯 ",     // Team Fortress 2
 		1973530: "🚌 ",     // Limbus Company
 		1454400: "🍪 ",     // Cookie Clicker
+		2420510: "🎤 ",     // HoloCure - Save the Fans!
+		459820:  "💖 ",     // Crush Crush
+		629520:  "🎶 ",     // Soundpad
+		368340:  "⚔️ ",     // CrossCode
+		588650:  "🗡️ ",     // Dead Cells
+		1145360: "🔥 ",     // Hades
+		1229490: "💣 ",     // ULTRAKILL
+		2835570: "🎯 ",     // Buckshot Roulette
+		247080:  "💀 ",     // Crypt of the NecroDancer
+		400040:  "📸 ",     // ShareX
+		1677740: "🤪 ",     // Stumble Guys
+		250900:  "👶 ",     // The Binding of Isaac: Rebirth
+		1313140: "🐑 ",     // Cult of the Lamb
+		1388880: "📚 ",     // Doki Doki Literature Club Plus!
+		311690:  "🔫 ",     // Enter the Gungeon
+		1229380: "🎹 ",     // Everhood
+		367520:  "🦇 ",     // Hollow Knight
+		1061090: "👑 ",     // Jump King
+		1256670: "📖 ",     // Library Of Ruina
+		3590:    "🌻 ",     // Plants vs. Zombies GOTY Edition
+		620:     "🌀 ",     // Portal 2
+		646570:  "🃏 ",     // Slay the Spire
+		413150:  "🌾 ",     // Stardew Valley
+		105600:  "🌍 ",     // Terraria
+		391540:  "💔 ",     // Undertale
+		1794680: "🧛 ",     // Vampire Survivors
+		2726450: "🔪 ",     // Windowkill
 	}
 
 	if emoji, ok := nameEmojiMap[id]; ok {
