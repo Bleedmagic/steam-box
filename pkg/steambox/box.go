@@ -96,11 +96,11 @@ func (b *Box) GetPlayTime(ctx context.Context, steamID uint64, multiLined bool, 
 	return lines, nil
 }
 
-// GetRecentGames gets 5 recently played games from the Steam API.
+// GetRecentGames gets 8 recently played games from the Steam API.
 func (b *Box) GetRecentGames(ctx context.Context, steamID uint64, multiLined bool) ([]string, error) {
 	params := &steam.GetRecentlyPlayedGamesParams{
 		SteamID: steamID,
-		Count:   5,
+		Count: 8,
 	}
 
 	gameRet, err := b.steam.IPlayerService.GetRecentlyPlayedGames(ctx, params)
@@ -111,7 +111,7 @@ func (b *Box) GetRecentGames(ctx context.Context, steamID uint64, multiLined boo
 	var max = 0
 
 	for _, game := range gameRet.Games {
-		if max >= 5 {
+		if max >= 8 {
 			break
 		}
 
@@ -125,7 +125,7 @@ func (b *Box) GetRecentGames(ctx context.Context, steamID uint64, multiLined boo
 		if multiLined {
 			gameLine := getNameEmoji(game.Appid, game.Name)
 			lines = append(lines, gameLine)
-			hoursLine := fmt.Sprintf("						    🕘 %d hrs %d mins", hours, mins)
+			hoursLine := fmt.Sprintf("						    ⌚ %d hrs %d mins", hours, mins)
 			lines = append(lines, hoursLine)
 		} else {
 			line := pad(getNameEmoji(game.Appid, game.Name), " ", 35) + " " +
