@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"sort"
 	"strings"
@@ -138,32 +137,32 @@ func (b *Box) GetRecentGames(ctx context.Context, steamID uint64, multiLined boo
 
 // UpdateMarkdown updates the content to the markdown file.
 func (b *Box) UpdateMarkdown(ctx context.Context, title, filename string, content []byte) error {
-	md, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return fmt.Errorf("steambox.UpdateMarkdown: Error reade a file: %w", err)
-	}
+    md, err := os.ReadFile(filename) // Updated to use os.ReadFile
+    if err != nil {
+        return fmt.Errorf("steambox.UpdateMarkdown: Error reading a file: %w", err)
+    }
 
-	start := []byte("<!-- steam-box start -->")
-	before := md[:bytes.Index(md, start)+len(start)]
-	end := []byte("<!-- steam-box end -->")
-	after := md[bytes.Index(md, end):]
+    start := []byte("<!-- steam-box start -->")
+    before := md[:bytes.Index(md, start)+len(start)]
+    end := []byte("<!-- steam-box end -->")
+    after := md[bytes.Index(md, end):]
 
-	newMd := bytes.NewBuffer(nil)
-	newMd.Write(before)
-	newMd.WriteString("\n" + title + "\n")
-	newMd.WriteString("```text\n")
-	newMd.Write(content)
-	newMd.WriteString("\n")
-	newMd.WriteString("```\n")
-	newMd.WriteString("<!-- Powered by https://github.com/YouEclipse/steam-box . -->\n")
-	newMd.Write(after)
+    newMd := bytes.NewBuffer(nil)
+    newMd.Write(before)
+    newMd.WriteString("\n" + title + "\n")
+    newMd.WriteString("```text\n")
+    newMd.Write(content)
+    newMd.WriteString("\n")
+    newMd.WriteString("```\n")
+    newMd.WriteString("<!-- Powered by https://github.com/YouEclipse/steam-box . -->\n")
+    newMd.Write(after)
 
-	err = ioutil.WriteFile(filename, newMd.Bytes(), os.ModeAppend)
-	if err != nil {
-		return fmt.Errorf("steambox.UpdateMarkdown: Error writing a file: %w", err)
-	}
+    err = os.WriteFile(filename, newMd.Bytes(), os.ModePerm) // Updated to use os.WriteFile
+    if err != nil {
+        return fmt.Errorf("steambox.UpdateMarkdown: Error writing a file: %w", err)
+    }
 
-	return nil
+    return nil
 }
 
 func pad(s, pad string, targetLength int) string {
