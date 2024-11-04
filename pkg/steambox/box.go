@@ -180,26 +180,29 @@ func pad(s, pad string, targetLength int) string {
 func getNameEmoji(id int, name string) string {
 	// hard code some game's emoji
 	var nameEmojiMap = map[int]string{
-		70:      "λ ",     // Half-Life
-		220:     "λ² ",    // Half-Life 2
+		70:      "λ ",      // Half-Life
+		220:     "λ² ",     // Half-Life 2
 		500:     "🧟 ",     // Left 4 Dead
 		550:     "🧟 ",     // Left 4 Dead 2
-		570:     "⚔️ ",    // Dota 2
+		570:     "⚔️ ",     // Dota 2
 		730:     "🔫 ",     // CS:GO
 		8930:    "🌏 ",     // Sid Meier's Civilization V
 		252950:  "🚀 ",     // Rocket League
-		269950:  "✈️ ",    // X-Plane 11
+		269950:  "✈️ ",     // X-Plane 11
 		271590:  "🚓 ",     // GTA 5
 		359550:  "🔫 ",     // Tom Clancy's Rainbow Six Siege
 		431960:  "💻 ",     // Wallpaper Engine
 		578080:  "🍳 ",     // PUBG
-		945360:  "🕵️‍♂️ ", // Among Us
-		1250410: "🛩️ ",    // Microsoft Flight Simulator
+		945360:  "🕵️‍♂️ ", 	// Among Us
+		1250410: "🛩️ ",     // Microsoft Flight Simulator
 		1091500: "🦾 ",     // Cyberpunk 2077
 		594650:  "🎯 ",     // Hunt: Showdown
 		230410:  "🐹 ",     // Warframe
 		397540:  "🤖 ",     // Borderlands 3
 		49520:   "🤖 ",     // Borderlands 2
+		440:     "🎯 ",     // Team Fortress 2
+		1973530: "🚌 ",     // Limbus Company
+		1454400: "🍪 ",     // Cookie Clicker
 	}
 
 	if emoji, ok := nameEmojiMap[id]; ok {
