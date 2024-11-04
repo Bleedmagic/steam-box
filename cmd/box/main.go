@@ -31,7 +31,7 @@ func main() {
 	ghUsername := os.Getenv("GH_USER")
 	gistID := os.Getenv("GIST_ID")
 
-	steamOption := "RECENT" // options for types of games to list: RECENT (recently played games), ALLTIME <default> (playtime of games in descending order)
+	steamOption := "ALLTIME" // options for types of games to list: RECENT (recently played games), ALLTIME <default> (playtime of games in descending order)
 	if os.Getenv("STEAM_OPTION") != "" {
 		steamOption = os.Getenv("STEAM_OPTION")
 	}
