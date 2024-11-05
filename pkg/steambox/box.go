@@ -98,7 +98,7 @@ func (b *Box) GetPlayTime(ctx context.Context, steamID uint64, multiLined bool, 
 func (b *Box) GetRecentGames(ctx context.Context, steamID uint64, multiLined bool) ([]string, error) {
 	params := &steam.GetRecentlyPlayedGamesParams{
 		SteamID: steamID,
-		Count: 10,
+		Count:   10,
 	}
 
 	gameRet, err := b.steam.IPlayerService.GetRecentlyPlayedGames(ctx, params)
@@ -106,33 +106,35 @@ func (b *Box) GetRecentGames(ctx context.Context, steamID uint64, multiLined boo
 		return nil, err
 	}
 	var lines []string
-	var max = 0
+
+	// Prepare a list to hold the games, ensuring the most recent is at the top
+	var recentGames []string
 
 	for _, game := range gameRet.Games {
-		if max >= 10 {
-			break
-		}
-
 		if game.Name == "" {
 			game.Name = "Unknown Game"
 		}
 
 		hours := game.PlaytimeForever / 60
 		mins := game.PlaytimeForever % 60
+		gameLine := getNameEmoji(game.Appid, game.Name)
 
 		if multiLined {
-			gameLine := getNameEmoji(game.Appid, game.Name)
-			lines = append(lines, gameLine)
+			recentGames = append(recentGames, gameLine)
 			hoursLine := fmt.Sprintf("						    ⌚ %d hrs %d mins", hours, mins)
-			lines = append(lines, hoursLine)
+			recentGames = append(recentGames, hoursLine)
 		} else {
-			line := pad(getNameEmoji(game.Appid, game.Name), " ", 35) + " " +
-				pad(fmt.Sprintf("⌚ %d hrs %d mins", hours, mins), "", 16)
-			lines = append(lines, line)
+			line := pad(gameLine, " ", 35) + " " + pad(fmt.Sprintf("⌚ %d hrs %d mins", hours, mins), "", 16)
+			recentGames = append(recentGames, line)
 		}
-		max++
 	}
-	return lines, nil
+
+	// Prepend the most recent game to the list
+	if len(recentGames) > 0 {
+		recentGames = append([]string{recentGames[0]}, recentGames[1:]...) // Move the most recent to the top
+	}
+
+	return recentGames, nil
 }
 
 // UpdateMarkdown updates the content to the markdown file.
