@@ -28,12 +28,12 @@ func main() {
 
 	ghToken := os.Getenv("GH_TOKEN")
 	ghUsername := os.Getenv("GH_USER")
-	gistID := os.Getenv("GIST_ID")         // All-time playtime Gist ID
+	gistID := os.Getenv("GIST_ID")				// All-time playtime Gist ID
 	gistIDRecent := os.Getenv("GIST_ID_RECENT") // Recent playtime Gist ID
 
 	multiLined := os.Getenv("MULTILINE") == "YES"
 
-	updateOption := os.Getenv("GIST") // options for update: GIST, MARKDOWN, GIST_AND_MARKDOWN
+	updateOption := os.Getenv("GIST") 			// options for update: GIST, MARKDOWN, GIST_AND_MARKDOWN
 	markdownFile := os.Getenv("MARKDOWN_FILE")
 
 	var updateGist, updateMarkdown bool
