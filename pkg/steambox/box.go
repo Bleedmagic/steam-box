@@ -228,6 +228,10 @@ func getNameEmoji(id int, name string) string {
 		391540:  "💔 ",     // Undertale
 		1794680: "🧛 ",     // Vampire Survivors
 		2726450: "🔪 ",     // Windowkill
+		219990: "🌅 ",      // Grim Dawn
+		2768430: "🦊 ",     // Atlyss
+		1321440: "📼 ",     // Cassette Beasts
+		2113850: "🎧 ",     // Spirit City: Lofi Sessions
 	}
 
 	if emoji, ok := nameEmojiMap[id]; ok {
