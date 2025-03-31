@@ -50,7 +50,7 @@ func (b *Box) UpdateGist(ctx context.Context, id string, gist *github.Gist) erro
 	return err
 }
 
-// GetPlayTime gets the top 10 Steam games played in descending order from the Steam API.
+// GetPlayTime gets the top 25 Steam games played in descending order from the Steam API.
 func (b *Box) GetPlayTime(ctx context.Context, steamID uint64, multiLined bool, appID ...uint32) ([]string, error) {
 	params := &steam.GetOwnedGamesParams{
 		SteamID:                steamID,
@@ -72,7 +72,7 @@ func (b *Box) GetPlayTime(ctx context.Context, steamID uint64, multiLined bool, 
 	})
 
 	for _, game := range gameRet.Games {
-		if max >= 10 {
+		if max >= 25 {
 			break
 		}
 
@@ -82,11 +82,11 @@ func (b *Box) GetPlayTime(ctx context.Context, steamID uint64, multiLined bool, 
 		if multiLined {
 			gameLine := getNameEmoji(game.Appid, game.Name)
 			lines = append(lines, gameLine)
-			hoursLine := fmt.Sprintf("						    ⌚ %d hrs %d mins", hours, mins)
+			hoursLine := fmt.Sprintf("						    🕘 %d hrs %d mins", hours, mins)
 			lines = append(lines, hoursLine)
 		} else {
 			line := pad(getNameEmoji(game.Appid, game.Name), " ", 35) + " " +
-				pad(fmt.Sprintf("⌚ %d hrs %d mins", hours, mins), "", 16)
+				pad(fmt.Sprintf("🕘 %d hrs %d mins", hours, mins), "", 16)
 			lines = append(lines, line)
 		}
 		max++
@@ -123,11 +123,11 @@ func (b *Box) GetRecentGames(ctx context.Context, steamID uint64, multiLined boo
 		if multiLined {
 			gameLine := getNameEmoji(game.Appid, game.Name)
 			lines = append(lines, gameLine)
-			hoursLine := fmt.Sprintf("						    ⌚ %d hrs %d mins", hours, mins)
+			hoursLine := fmt.Sprintf("						    🕘 %d hrs %d mins", hours, mins)
 			lines = append(lines, hoursLine)
 		} else {
 			line := pad(getNameEmoji(game.Appid, game.Name), " ", 35) + " " +
-				pad(fmt.Sprintf("⌚ %d hrs %d mins", hours, mins), "", 16)
+				pad(fmt.Sprintf("🕘 %d hrs %d mins", hours, mins), "", 16)
 			lines = append(lines, line)
 		}
 		max++
