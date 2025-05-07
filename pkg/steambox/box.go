@@ -72,7 +72,7 @@ func (b *Box) GetPlayTime(ctx context.Context, steamID uint64, multiLined bool, 
 	})
 
 	for _, game := range gameRet.Games {
-		if max >= 25 {
+		if max >= 20 {
 			break
 		}
 
