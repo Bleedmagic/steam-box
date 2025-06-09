@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/YouEclipse/steam-box/pkg/steambox"
 	"github.com/google/go-github/github"
@@ -52,9 +53,24 @@ func main() {
 
 	// Update all-time playtime Gist
 	if gistID != "" {
-		lines, err := box.GetPlayTime(ctx, steamID, multiLined, appIDList...)
-		if err != nil {
+		var lines []string
+		var err error
+		for retries := 0; retries < 5; retries++ {
+			lines, err = box.GetPlayTime(ctx, steamID, multiLined, appIDList...)
+			if err == nil {
+				break
+			}
+			if strings.Contains(err.Error(), "429") {
+				wait := time.Duration(2<<retries) * time.Second
+				fmt.Printf("Received 429. Retrying in %v...\n", wait)
+				time.Sleep(wait)
+				continue
+			}
 			panic("GetPlayTime error: " + err.Error())
+		}
+
+		if err != nil {
+			panic("GetPlayTime failed after retries: " + err.Error())
 		}
 
 		if updateGist {
@@ -68,9 +84,23 @@ func main() {
 
 	// Update recent playtime Gist
 	if gistIDRecent != "" {
-		lines, err := box.GetRecentGames(ctx, steamID, multiLined)
-		if err != nil {
+		var lines []string
+		var err error
+		for retries := 0; retries < 5; retries++ {
+			lines, err = box.GetRecentGames(ctx, steamID, multiLined)
+			if err == nil {
+				break
+			}
+			if strings.Contains(err.Error(), "429") {
+				wait := time.Duration(2<<retries) * time.Second
+				fmt.Printf("Received 429 on recent games. Retrying in %v...\n", wait)
+				time.Sleep(wait)
+				continue
+			}
 			panic("GetRecentGames error: " + err.Error())
+		}
+		if err != nil {
+			panic("GetRecentGames failed after retries: " + err.Error())
 		}
 
 		if updateGist {
