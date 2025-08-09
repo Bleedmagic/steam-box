@@ -233,6 +233,8 @@ func getNameEmoji(id int, name string) string {
 		1321440: "📼 ",     // Cassette Beasts
 		2113850: "🎧 ",     // Spirit City: Lofi Sessions
 		365670: "🧊 ",      // Blender
+		3224770: "🐴 ",     // Umamusume: Pretty Derby
+		1933660: "🌱 ",     // Demons Roots
 	}
 
 	if emoji, ok := nameEmojiMap[id]; ok {
